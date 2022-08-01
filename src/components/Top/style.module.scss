@@ -3,20 +3,36 @@
   display: flex;
   justify-content: center;
   @include mq.mq($until: tablet) {
-    flex-direction: column;
+    gap: 36px;
   }
   @include mq.mq($from: tablet) {
-    gap: 36px;
+    gap: 64px;
   }
 }
 
 .imageWrapper {
-  height: calc(2624px / 10);
+  border: 1px solid rgba(#333, 0.5);
+  box-shadow: 4px 4px 4px rgba(#333, 0.5);
+  overflow: hidden;
   position: relative;
-  width: calc(2155px / 10);
+  @include mq.mq($until: tablet) {
+    border-radius: 8px;
+    height: 96px;
+    width: 96px;
+  }
+  @include mq.mq($from: tablet) {
+    border-radius: 12px;
+    height: 120px;
+    width: 120px;
+  }
 }
 
 .heading1 {
   font-family: "Mr Dafoe", cursive;
-  font-size: 9.6rem;
+  @include mq.mq($until: tablet) {
+    font-size: 7.2rem;
+  }
+  @include mq.mq($from: tablet) {
+    font-size: 9.6rem;
+  }
 }

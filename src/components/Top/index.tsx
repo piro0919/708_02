@@ -8,7 +8,7 @@ function Top(): JSX.Element {
   return (
     <div className={styles.wrapper} style={{ height }}>
       <div className={styles.imageWrapper}>
-        <Image alt="7:08" layout="fill" src="/top.jpg" />
+        <Image alt="7:08" layout="fill" quality={100} src="/top.jpg" />
       </div>
       <h1 className={styles.heading1}>7:08</h1>
     </div>

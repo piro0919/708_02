@@ -1,0 +1,32 @@
+.drawer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 24px;
+  width: 240px !important;
+}
+
+.list {
+  display: grid;
+  font-size: inherit;
+  gap: 24px;
+  text-align: center;
+}
+
+.iconsWrapper {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+}
+
+.icon {
+  height: 28px !important;
+  width: 28px !important;
+}
+
+.footer {
+  font-family: arial, sans-serif;
+  font-size: 1.4rem;
+  padding: 24px 0 0;
+  text-align: center;
+}

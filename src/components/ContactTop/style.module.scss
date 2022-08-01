@@ -1,0 +1,63 @@
+.formInner {
+  max-width: 480px;
+  width: 100%;
+}
+
+.fieldsWrapper {
+  display: grid;
+  gap: 24px;
+}
+
+.field {
+  display: grid;
+}
+
+.label {
+  display: flex;
+  font-size: 1.4rem;
+  gap: 4px;
+  padding: 0 0 4px;
+}
+
+.input,
+.textarea {
+  background: #fff;
+  border: 1px solid #333;
+  padding: 4px 8px;
+}
+
+.input[type="number"] {
+  text-align: right;
+}
+
+.textarea {
+  min-height: 240px;
+}
+
+.budgetWrapper {
+  align-items: center;
+  display: grid;
+  gap: 8px;
+  grid-template: auto / 240px auto;
+}
+
+.errorMessage {
+  color: #f00;
+  font-size: 1.4rem;
+}
+
+.buttonWrapper {
+  display: flex;
+  justify-content: center;
+  padding: 48px 0 0;
+}
+
+.button {
+  background: #333;
+  color: #fff;
+  padding: 8px 24px;
+}
+
+.button:disabled {
+  opacity: 0.5;
+}

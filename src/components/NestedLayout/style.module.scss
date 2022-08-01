@@ -1,0 +1,22 @@
+.wrapper {
+  display: flex;
+  justify-content: center;
+  padding: 84px 0 120px;
+}
+
+.heading1 {
+  display: none;
+}
+
+.inner {
+  max-width: 1080px;
+  width: 100%;
+  @include mq.mq($until: tablet) {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+  @include mq.mq($from: tablet) {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}

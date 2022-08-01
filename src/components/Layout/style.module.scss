@@ -1,0 +1,16 @@
+.button {
+  background: rgba(#fff, 0.75);
+  border: 1px solid rgba(#333, 0.5);
+  border-radius: 4px;
+  display: flex;
+  left: 0;
+  padding: 12px;
+  position: fixed;
+  top: 0;
+  @include mq.mq($until: tablet) {
+    margin: 12px;
+  }
+  @include mq.mq($from: tablet) {
+    margin: 24px;
+  }
+}

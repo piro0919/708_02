@@ -1,0 +1,42 @@
+.list {
+  display: grid;
+  gap: 72px;
+}
+
+.imageGallery {
+  padding: 0 0 4px;
+}
+
+.imageGallery :global(.image-gallery-slides),
+.imageGallery :global(.image-gallery-thumbnail) {
+  background: rgba(#fff, 0.75);
+}
+
+.imageGallery :global(.image-gallery-slides) {
+  border-radius: 12px;
+}
+
+.imageGallery :global(.image-gallery-image),
+.imageGallery :global(.image-gallery-thumbnail-image) {
+  object-fit: contain;
+  @include mq.mq($until: tablet) {
+    aspect-ratio: 4 / 3;
+  }
+  @include mq.mq($from: tablet) {
+    aspect-ratio: 16 / 9;
+  }
+}
+
+.imageGallery :global(.image-gallery-thumbnails-container) {
+  cursor: default;
+  text-align: left;
+}
+
+.imageGallery :global(.image-gallery-slides),
+.imageGallery :global(.image-gallery-thumbnail.active) {
+  border: 1px solid rgba(#333, 0.5);
+}
+
+.heading3 {
+  font-size: 2.4rem;
+}

@@ -2,6 +2,18 @@
   align-items: center;
   display: flex;
   justify-content: center;
+  @include mq.mq($until: tablet) {
+    flex-direction: column;
+  }
+  @include mq.mq($from: tablet) {
+    gap: 36px;
+  }
+}
+
+.imageWrapper {
+  height: calc(2624px / 10);
+  position: relative;
+  width: calc(2155px / 10);
 }
 
 .heading1 {

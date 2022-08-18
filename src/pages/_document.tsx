@@ -18,7 +18,7 @@ class MyDocument extends Document {
 
   render(): JSX.Element {
     return (
-      <Html lang="ja">
+      <Html data-color-mode="light" lang="ja">
         <Head>
           <link href="https://fonts.googleapis.com" rel="preconnect" />
           <link

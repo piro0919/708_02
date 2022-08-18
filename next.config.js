@@ -1,7 +1,8 @@
 const path = require("path");
+const removeImports = require("next-remove-imports")();
 
 /** @type {import('next').NextConfig} */
-const nextConfig = {
+const nextConfig = removeImports({
   experimental: {
     images: {
       unoptimized: true,
@@ -24,6 +25,6 @@ const nextConfig = {
     includePaths: [path.join(__dirname, "src/styles")],
   },
   swcMinify: true,
-};
+});
 
 module.exports = nextConfig;

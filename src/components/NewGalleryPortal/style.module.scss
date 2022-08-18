@@ -1,0 +1,33 @@
+.wrapper {
+  background: rgba(#fff, 0.9);
+  display: flex;
+  inset: 0;
+  left: 0;
+  overflow: hidden auto;
+  padding: 24px;
+  position: fixed;
+  top: 0;
+  z-index: 9998;
+}
+
+.list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+
+.item {
+  background: #fff;
+  border: 1px solid #333;
+  cursor: pointer;
+  display: grid;
+  grid-template: auto auto / auto;
+  padding: 12px;
+}
+
+.buttonWrapper {
+  padding: 24px;
+  position: absolute;
+  right: 0;
+  top: 0;
+}

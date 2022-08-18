@@ -1,0 +1,23 @@
+.wrapper {
+  display: grid;
+  grid-template: auto / auto 1fr;
+  position: relative;
+}
+
+.proSidebar {
+  border-right: 1px solid #333;
+  position: sticky;
+  text-align: center;
+  top: 0;
+}
+
+.content {
+  padding: 24px;
+}
+
+.hr {
+  background: #333;
+  border: 0;
+  height: 1px;
+  width: 100%;
+}

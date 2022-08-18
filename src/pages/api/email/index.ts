@@ -3,6 +3,7 @@ import nc from "next-connect";
 import nodemailer from "nodemailer";
 import { Options } from "nodemailer/lib/mailer";
 import { SentMessageInfo } from "nodemailer/lib/smtp-transport";
+import options from "libs/options";
 
 export type PostEmailBody = Pick<
   Options,
@@ -19,15 +20,9 @@ type ExtendedPostResponse = {
   json: (body: PostEmailData) => void;
 };
 
-const handler = nc<NextApiRequest, NextApiResponse<ExtendedPostResponse>>({
-  onError: (err, _, res) => {
-    console.error(err.stack);
-    res.status(500).end("Something broke!");
-  },
-  onNoMatch: (req, res) => {
-    res.status(404).end("Page is not found");
-  },
-}).post<ExtendedPostRequest, ExtendedPostResponse>(async ({ body }, res) => {
+const handler = nc<NextApiRequest, NextApiResponse<ExtendedPostResponse>>(
+  options
+).post<ExtendedPostRequest, ExtendedPostResponse>(async ({ body }, res) => {
   const transporter = nodemailer.createTransport({
     auth: {
       pass: process.env.NODEMAILER_AUTH_PASS,

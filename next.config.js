@@ -1,15 +1,14 @@
 const path = require("path");
-const removeImports = require("next-remove-imports")();
 
 /** @type {import('next').NextConfig} */
-const nextConfig = removeImports({
+const nextConfig = {
   experimental: {
     images: {
       unoptimized: true,
     },
   },
   optimizeFonts: false,
-  reactStrictMode: true,
+  reactStrictMode: false,
   sassOptions: {
     additionalData: async (content, { resourcePath }) => {
       if (resourcePath.includes("node_modules")) {
@@ -25,6 +24,6 @@ const nextConfig = removeImports({
     includePaths: [path.join(__dirname, "src/styles")],
   },
   swcMinify: true,
-});
+};
 
 module.exports = nextConfig;

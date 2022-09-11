@@ -1,4 +1,3 @@
-import { Entry } from "contentful";
 import { GetServerSideProps } from "next";
 import noScroll from "no-scroll";
 import { ReactElement, useEffect, useMemo, useState } from "react";
@@ -10,35 +9,23 @@ import Seo from "components/Seo";
 import client from "libs/client";
 
 export type GalleryProps = {
-  illustrationItems: Entry<Contentful.IIllustrationsFields>[];
+  illustratoration: Microcms.Illustratoration;
 };
 
-function Gallery({ illustrationItems }: GalleryProps): JSX.Element {
+function Gallery({
+  illustratoration: { contents },
+}: GalleryProps): JSX.Element {
   const [photoIndex, setPhotoIndex] = useState<LightboxProps["photoIndex"]>();
   const illustrations = useMemo<GalleryTopProps["illustrations"]>(
     () =>
-      illustrationItems.map(
-        (
-          {
-            fields: {
-              image: {
-                fields: {
-                  file: { url },
-                },
-              },
-              title,
-            },
-          },
-          index
-        ) => ({
-          title,
-          image: url,
-          onClick: (): void => {
-            setPhotoIndex(index);
-          },
-        })
-      ),
-    [illustrationItems]
+      contents.map(({ image: { url }, title }, index) => ({
+        title,
+        image: url,
+        onClick: (): void => {
+          setPhotoIndex(index);
+        },
+      })),
+    [contents]
   );
   const images = useMemo<LightboxProps["images"]>(
     () => illustrations.map(({ image }) => image),
@@ -81,14 +68,16 @@ Gallery.getLayout = function getLayout(page: ReactElement): JSX.Element {
 export const getServerSideProps: GetServerSideProps<
   GalleryProps
 > = async () => {
-  const { items: illustrationItems } =
-    await client.getEntries<Contentful.IIllustrationsFields>({
-      content_type: "illustrations" as Contentful.CONTENT_TYPE,
-    });
+  const illustratoration = await client.get<Microcms.Illustratoration>({
+    endpoint: "illustratorations",
+    queries: {
+      limit: 100,
+    },
+  });
 
   return {
     props: {
-      illustrationItems,
+      illustratoration,
     },
   };
 };

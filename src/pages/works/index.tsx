@@ -1,5 +1,4 @@
 import NoSSR from "@mpth/react-no-ssr";
-import { Entry } from "contentful";
 import { GetServerSideProps } from "next";
 import noScroll from "no-scroll";
 import { ReactElement, useCallback, useEffect, useMemo, useState } from "react";
@@ -11,27 +10,21 @@ import WorksTop, { WorksTopProps } from "components/WorksTop";
 import client from "libs/client";
 
 export type WorksProps = {
-  workItems: Entry<Contentful.IWorksFields>[];
+  work: Microcms.Work;
 };
 
-function Works({ workItems }: WorksProps): JSX.Element {
+function Works({ work: { contents } }: WorksProps): JSX.Element {
   const works = useMemo<WorksTopProps["works"]>(
     () =>
-      workItems.map(({ fields: { description, images, title } }) => ({
-        description,
+      contents.map(({ description, images, title }) => ({
         title,
-        images: images.map(
-          ({
-            fields: {
-              file: { url },
-            },
-          }) => ({
-            original: url,
-            thumbnail: url,
-          })
-        ),
+        description: description || "",
+        images: images.map(({ image: { url } }) => ({
+          original: url,
+          thumbnail: url,
+        })),
       })),
-    [workItems]
+    [contents]
   );
   const [images, setImages] = useState<LightboxProps["images"]>();
   const [photoIndex, setPhotoIndex] = useState<LightboxProps["photoIndex"]>();
@@ -40,7 +33,7 @@ function Works({ workItems }: WorksProps): JSX.Element {
       const foundWork = works.find(({ images }) =>
         images.some(({ original }) =>
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          ((target as any).src as string).endsWith(original)
+          ((target as any).firstChild.src as string).endsWith(original)
         )
       );
 
@@ -54,7 +47,7 @@ function Works({ workItems }: WorksProps): JSX.Element {
 
       const index = images.findIndex(({ original }) =>
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        ((target as any).src as string).endsWith(original)
+        ((target as any).firstChild.src as string).endsWith(original)
       );
 
       setPhotoIndex(index);
@@ -98,15 +91,16 @@ Works.getLayout = function getLayout(page: ReactElement): JSX.Element {
 };
 
 export const getServerSideProps: GetServerSideProps<WorksProps> = async () => {
-  const { items: workItems } = await client.getEntries<Contentful.IWorksFields>(
-    {
-      content_type: "works" as Contentful.CONTENT_TYPE,
-    }
-  );
+  const work = await client.get<Microcms.Work>({
+    endpoint: "works",
+    queries: {
+      limit: 100,
+    },
+  });
 
   return {
     props: {
-      workItems,
+      work,
     },
   };
 };

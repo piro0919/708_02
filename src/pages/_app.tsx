@@ -1,5 +1,3 @@
-import "@uiw/react-markdown-editor/markdown-editor.css";
-import "@uiw/react-markdown-preview/markdown.css";
 import { NextPage } from "next";
 import type { AppProps } from "next/app";
 import NextNProgress from "nextjs-progressbar";
@@ -11,7 +9,6 @@ import "ress";
 import "styles/globals.scss";
 import "styles/mq-settings.scss";
 import "styles/react-image-lightbox.scss";
-import "styles/react-markdown-editor.scss";
 import "styles/react-pro-sidebar.scss";
 
 type NextPageWithLayout = NextPage & {

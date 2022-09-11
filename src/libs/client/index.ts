@@ -1,9 +1,8 @@
-import { createClient } from "contentful";
+import { createClient } from "microcms-js-sdk";
 
 const client = createClient({
-  accessToken: process.env.CONTENTFUL_DELIVERY_API_ACCESS_TOKEN || "",
-  environment: process.env.CONTENTFUL_ENVIRONMENT,
-  space: process.env.CONTENTFUL_SPACE_ID || "",
+  apiKey: process.env.MICROCMS_API_KEY || "",
+  serviceDomain: process.env.MICROCMS_SERVICE_DOMAIN || "",
 });
 
 export default client;

@@ -1,29 +1,20 @@
-import { Entry } from "contentful";
 import { GetServerSideProps } from "next";
-import { ReactElement, useMemo } from "react";
-import AboutTop, { AboutTopProps } from "components/AboutTop";
+import { ReactElement } from "react";
+import AboutTop from "components/AboutTop";
 import Layout from "components/Layout";
 import NestedLayout from "components/NestedLayout";
 import Seo from "components/Seo";
 import client from "libs/client";
 
 export type AboutProps = {
-  aboutItems: Entry<Contentful.IAboutFields>[];
+  about: Microcms.About;
 };
 
-function About({ aboutItems }: AboutProps): JSX.Element {
-  const about = useMemo<AboutTopProps["about"]>(() => {
-    const {
-      fields: { profile },
-    } = aboutItems[0];
-
-    return profile;
-  }, [aboutItems]);
-
+function About({ about: { profile } }: AboutProps): JSX.Element {
   return (
     <>
       <Seo title="ABOUT" />
-      <AboutTop about={about} />
+      <AboutTop about={profile} />
     </>
   );
 }
@@ -37,14 +28,13 @@ About.getLayout = function getLayout(page: ReactElement): JSX.Element {
 };
 
 export const getServerSideProps: GetServerSideProps<AboutProps> = async () => {
-  const { items: aboutItems } =
-    await client.getEntries<Contentful.IAboutFields>({
-      content_type: "about" as Contentful.CONTENT_TYPE,
-    });
+  const about = await client.get<Microcms.About>({
+    endpoint: "about",
+  });
 
   return {
     props: {
-      aboutItems,
+      about,
     },
   };
 };

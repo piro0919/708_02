@@ -1,31 +1,28 @@
-import { GetServerSideProps } from "next";
+import { GetStaticProps } from "next";
 import noScroll from "no-scroll";
 import { ReactElement, useEffect, useMemo, useState } from "react";
+import useSWR, { SWRConfig } from "swr";
 import GalleryTop, { GalleryTopProps } from "components/GalleryTop";
 import Layout from "components/Layout";
 import Lightbox, { LightboxProps } from "components/Lightbox";
 import NestedLayout from "components/NestedLayout";
 import Seo from "components/Seo";
 import client from "libs/client";
+import { GetIllustrationsData } from "pages/api/illustrations";
 
-export type GalleryProps = {
-  illustratoration: Microcms.Illustratoration;
-};
-
-function Gallery({
-  illustratoration: { contents },
-}: GalleryProps): JSX.Element {
+function Gallery(): JSX.Element {
   const [photoIndex, setPhotoIndex] = useState<LightboxProps["photoIndex"]>();
+  const { data } = useSWR<GetIllustrationsData>("/api/illustrations");
   const illustrations = useMemo<GalleryTopProps["illustrations"]>(
     () =>
-      contents.map(({ image: { url }, title }, index) => ({
+      data?.contents.map(({ image: { url }, title }, index) => ({
         title,
         image: url,
         onClick: (): void => {
           setPhotoIndex(index);
         },
-      })),
-    [contents]
+      })) || [],
+    [data?.contents]
   );
   const images = useMemo<LightboxProps["images"]>(
     () => illustrations.map(({ image }) => image),
@@ -57,7 +54,21 @@ function Gallery({
   );
 }
 
-Gallery.getLayout = function getLayout(page: ReactElement): JSX.Element {
+export type PageProps = {
+  fallback: {
+    "/api/illustrations": Microcms.Illustrations;
+  };
+};
+
+function Page({ fallback }: PageProps): JSX.Element {
+  return (
+    <SWRConfig value={{ fallback }}>
+      <Gallery />
+    </SWRConfig>
+  );
+}
+
+Page.getLayout = function getLayout(page: ReactElement): JSX.Element {
   return (
     <Layout>
       <NestedLayout>{page}</NestedLayout>
@@ -65,11 +76,9 @@ Gallery.getLayout = function getLayout(page: ReactElement): JSX.Element {
   );
 };
 
-export const getServerSideProps: GetServerSideProps<
-  GalleryProps
-> = async () => {
-  const illustratoration = await client.get<Microcms.Illustratoration>({
-    endpoint: "illustratorations",
+export const getStaticProps: GetStaticProps<PageProps> = async () => {
+  const illustrations = await client.get<Microcms.Illustrations>({
+    endpoint: "illustrations",
     queries: {
       limit: 100,
     },
@@ -77,9 +86,12 @@ export const getServerSideProps: GetServerSideProps<
 
   return {
     props: {
-      illustratoration,
+      fallback: {
+        "/api/illustrations": illustrations,
+      },
     },
+    revalidate: 60 * 60 * 24,
   };
 };
 
-export default Gallery;
+export default Page;

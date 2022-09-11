@@ -7,7 +7,7 @@ declare module Microcms {
     updatedAt: string;
   };
 
-  type Illustratoration = {
+  type Illustrations = {
     contents: {
       createdAt: string;
       description?: string;
@@ -27,7 +27,7 @@ declare module Microcms {
     totalCount: number;
   };
 
-  type Work = {
+  type Works = {
     contents: {
       createdAt: string;
       description?: string;

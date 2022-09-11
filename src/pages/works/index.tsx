@@ -1,30 +1,29 @@
 import NoSSR from "@mpth/react-no-ssr";
-import { GetServerSideProps } from "next";
+import { GetStaticProps } from "next";
 import noScroll from "no-scroll";
 import { ReactElement, useCallback, useEffect, useMemo, useState } from "react";
+import useSWR, { SWRConfig } from "swr";
 import Layout from "components/Layout";
 import Lightbox, { LightboxProps } from "components/Lightbox";
 import NestedLayout from "components/NestedLayout";
 import Seo from "components/Seo";
 import WorksTop, { WorksTopProps } from "components/WorksTop";
 import client from "libs/client";
+import { GetWorksData } from "pages/api/works";
 
-export type WorksProps = {
-  work: Microcms.Work;
-};
-
-function Works({ work: { contents } }: WorksProps): JSX.Element {
+function Works(): JSX.Element {
+  const { data } = useSWR<GetWorksData>("/api/works");
   const works = useMemo<WorksTopProps["works"]>(
     () =>
-      contents.map(({ description, images, title }) => ({
+      data?.contents.map(({ description, images, title }) => ({
         title,
         description: description || "",
         images: images.map(({ image: { url } }) => ({
           original: url,
           thumbnail: url,
         })),
-      })),
-    [contents]
+      })) || [],
+    [data?.contents]
   );
   const [images, setImages] = useState<LightboxProps["images"]>();
   const [photoIndex, setPhotoIndex] = useState<LightboxProps["photoIndex"]>();
@@ -82,7 +81,21 @@ function Works({ work: { contents } }: WorksProps): JSX.Element {
   );
 }
 
-Works.getLayout = function getLayout(page: ReactElement): JSX.Element {
+export type PageProps = {
+  fallback: {
+    "/api/works": Microcms.Works;
+  };
+};
+
+function Page({ fallback }: PageProps): JSX.Element {
+  return (
+    <SWRConfig value={{ fallback }}>
+      <Works />
+    </SWRConfig>
+  );
+}
+
+Page.getLayout = function getLayout(page: ReactElement): JSX.Element {
   return (
     <Layout>
       <NestedLayout>{page}</NestedLayout>
@@ -90,8 +103,8 @@ Works.getLayout = function getLayout(page: ReactElement): JSX.Element {
   );
 };
 
-export const getServerSideProps: GetServerSideProps<WorksProps> = async () => {
-  const work = await client.get<Microcms.Work>({
+export const getStaticProps: GetStaticProps<PageProps> = async () => {
+  const works = await client.get<Microcms.Works>({
     endpoint: "works",
     queries: {
       limit: 100,
@@ -100,9 +113,12 @@ export const getServerSideProps: GetServerSideProps<WorksProps> = async () => {
 
   return {
     props: {
-      work,
+      fallback: {
+        "/api/works": works,
+      },
     },
+    revalidate: 60 * 60 * 24,
   };
 };
 
-export default Works;
+export default Page;

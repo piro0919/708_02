@@ -6,10 +6,11 @@ import { Toaster } from "react-hot-toast";
 import "react-image-lightbox/style.css";
 import "react-modern-drawer/dist/index.css";
 import "ress";
+import { SWRConfig } from "swr";
+import fetcher from "libs/fetcher";
 import "styles/globals.scss";
 import "styles/mq-settings.scss";
 import "styles/react-image-lightbox.scss";
-import "styles/react-pro-sidebar.scss";
 
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode;
@@ -23,7 +24,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
   const getLayout = Component.getLayout ?? ((page): ReactNode => page);
 
   return (
-    <>
+    <SWRConfig value={{ fetcher, revalidateOnFocus: false }}>
       {getLayout(<Component {...pageProps} />)}
       <Toaster
         position="bottom-center"
@@ -34,7 +35,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
         }}
       />
       <NextNProgress />
-    </>
+    </SWRConfig>
   );
 }
 

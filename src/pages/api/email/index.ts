@@ -10,11 +10,11 @@ export type PostEmailBody = Pick<
   "from" | "replyTo" | "subject" | "text"
 >;
 
-export type PostEmailData = SentMessageInfo;
-
 type ExtendedPostRequest = {
   body: PostEmailBody;
 };
+
+export type PostEmailData = SentMessageInfo;
 
 type ExtendedPostResponse = {
   json: (body: PostEmailData) => void;
